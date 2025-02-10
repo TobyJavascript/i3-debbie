@@ -17,7 +17,7 @@ load {
 }
 
 cpu_temperature 0 {
-	format = "<span background='#d12f2c'>    </span><span background='#bfbaac'>  %degrees °C  </span>"
+	format = "<span background='#d12f2c'>  CPU  </span><span background='#bfbaac'>  %degrees °C  </span>"
 	path = "/sys/class/thermal/thermal_zone0/temp"
 }
 

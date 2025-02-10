@@ -2,6 +2,8 @@
 set $super Mod4
 set $alt Mod1
 
+
+
 # Set monitor variables - MAKE SURE THESE MATCH YOUR SYSTEM
 set $lenovo HDMI-0
 set $viewSonic DP-0
@@ -17,15 +19,24 @@ workspace 1 output $lenovo
 workspace 2 output $viewSonic
 workspace 3 output $benQ
 
+
+
 # set font
 font pango:Ionicons 9, Poppins Regular 9
+
+
 
 # use mouse+$super to drag floating windows to their wanted position
 floating_modifier $super
 
+
+
 # autostart
-exec --no-startup-id hsetroot -fill ~/.wallpaper.png
+exec --no-startup-id hsetroot -fill ~/.wallpaper.svg
 exec /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1
+exec --no-startup-id picom --config ~/.config/picom/picom.conf
+
+
 
 # start a terminal
 bindsym $super+Return exec i3-sensible-terminal
@@ -35,14 +46,21 @@ bindsym $super+d exec i3-dmenu-desktop --dmenu="dmenu -i -b \
 -fn 'Poppins:size=9' -nb '#141c21' -nf '#93a1a1' \
 -sb '#289c93' -sf '#141c21'"
 
+
+
 # screenshot of area to clipboard
 bindsym $super+Shift+s exec --no-startup-id maim -s | xclip -selection clipboard -t image/png
+
+
 
 # common apps keybinds
 bindsym Print exec scrot 'Cheese_%a-%d%b%y_%H.%M.png' -e 'xdg-open ~/$f'
 bindsym $super+l exec i3lock -i ~/.lock.png
 bindsym $super+w exec firefox
-bindsym $super+e exec thunar
+bindsym $super+e exec thunarer
+bindsym $super+b exec steam
+
+
 
 # change volume and brightness
 bindsym XF86AudioRaiseVolume exec amixer -q set Master 5%+
@@ -50,6 +68,8 @@ bindsym XF86AudioLowerVolume exec amixer -q set Master 5%-
 bindsym XF86AudioMute exec amixer set Master toggle
 bindsym XF86MonBrightnessUp exec brightnessctl set 5%+
 bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
+
+
 
 # kill focused window
 bindsym $super+c kill
@@ -86,20 +106,20 @@ bindsym $super+Shift+space focus mode_toggle
 # switch to workspace
 bindsym $super+Control+Right workspace next
 bindsym $super+Control+Left workspace prev
-bindsym $super+1 workspace 1:I
-bindsym $super+2 workspace 2:II
-bindsym $super+3 workspace 3:III
-bindsym $super+4 workspace 4:IV
-bindsym $super+5 workspace 5:V
-bindsym $super+6 workspace 6:VI
+bindsym $super+1 workspace 1:1
+bindsym $super+2 workspace 2:2
+bindsym $super+3 workspace 3:3
+bindsym $super+4 workspace 4:4
+bindsym $super+5 workspace 5:5
+bindsym $super+6 workspace 6:6
 
 # move focused container to workspace
-bindsym $super+Shift+1 move container to workspace 1:I
-bindsym $super+Shift+2 move container to workspace 2:II
-bindsym $super+Shift+3 move container to workspace 3:III
-bindsym $super+Shift+4 move container to workspace 4:IV
-bindsym $super+Shift+5 move container to workspace 5:V
-bindsym $super+Shift+6 move container to workspace 6:VI
+bindsym $super+Shift+1 move container to workspace 1:1
+bindsym $super+Shift+2 move container to workspace 2:2
+bindsym $super+Shift+3 move container to workspace 3:3
+bindsym $super+Shift+4 move container to workspace 4:4
+bindsym $super+Shift+5 move container to workspace 5:5
+bindsym $super+Shift+6 move container to workspace 6:6
 
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $super+BackSpace exec "i3-msg restart"
@@ -110,6 +130,8 @@ bindsym $super+q exec "i3-nagbar -t warning -m 'Really, exit?' \
 
 # Suspend i3
 bindsym $super+t exec --no-startup-id systemctl suspend
+
+
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
