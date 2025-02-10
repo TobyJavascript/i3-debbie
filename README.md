@@ -1,8 +1,12 @@
 # User Manual: i3 Rice Dependencies
 
+Version 1.0
+
 This document lists all the dependencies used for my i3 rice setup. It covers the required packages, libraries, and their functionality.
 
 IMPORTANT: This setup is for Debian 12. Therefore I can not guarantee that all libraries or commands are the same for your setup. However, if you are using a Debian fork like Ubuntu or Mint, this guide will probably apply for you as well.
+
+This is originally a fork of [addys repository](https://github.com/addy-dclxvi/i3-starterpack).
 
 ---
 
