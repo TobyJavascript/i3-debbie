@@ -98,3 +98,7 @@ These libraries provide bonus functionality.
 - **Installation**: `sudo apt-get install btop`
 - **Note**: This repo has config files for btop, but they are not necessary. 
 
+---
+
+## Good luck!
+
