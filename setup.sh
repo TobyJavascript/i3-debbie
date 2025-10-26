@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 # setup.sh — i3 Rice Setup Script for Debian 12
-
 set -euo pipefail
 
 # === COLORS ===
@@ -12,12 +11,19 @@ RESET="\e[0m"
 # === PATHS ===
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+# === FLAGS ===
+DRY_RUN=false
+if [[ "${1:-}" == "--dry-run" ]]; then
+    DRY_RUN=true
+    echo -e "${YELLOW}[i] Running in dry-run mode — no files will be changed.${RESET}"
+fi
+
 # === PACKAGE LIST ===
 PACKAGES=(
     # Core
     i3
     git
-
+    
     # Libraries / Tools
     hsetroot
     xclip
@@ -25,7 +31,7 @@ PACKAGES=(
     dunst
     policykit-1-gnome
     rsync
-
+    
     # Fonts / Text Rendering
     fonts-firacode
 )
@@ -40,16 +46,26 @@ COPY_MAP=(
 
 echo -e "${GREEN}[*] Starting i3 rice setup for Debian 12...${RESET}"
 
-# === System Update and Upgrade ===
-echo -e "${YELLOW}[*] Updating package lists and upgrading system...${RESET}"
-sudo apt update -y && sudo apt upgrade -y
+# === System Update ===
+echo -e "${YELLOW}[*] Updating package lists...${RESET}"
+sudo apt update -y
 
-# === Install Required Packages ===
-echo -e "${YELLOW}[*] Installing required packages...${RESET}"
-sudo apt install -y "${PACKAGES[@]}"
-echo -e "${GREEN}[✓] All required packages installed successfully.${RESET}"
+# === Install Required Packages (skip existing) ===
+echo -e "${YELLOW}[*] Installing required packages (skipping existing)...${RESET}"
+for pkg in "${PACKAGES[@]}"; do
+    if dpkg -s "$pkg" &>/dev/null; then
+        echo "  → $pkg already installed"
+    else
+        echo "  → Installing $pkg"
+        sudo apt install -y "$pkg"
+    fi
+done
+echo -e "${GREEN}[✓] Package installation complete.${RESET}"
 
 # === Copy Files and Folders ===
+RSYNC_OPTS="-avh --progress"
+$DRY_RUN && RSYNC_OPTS+=" --dry-run"
+
 echo -e "${YELLOW}[*] Copying configured files and folders...${RESET}"
 
 for pair in "${COPY_MAP[@]}"; do
@@ -64,14 +80,22 @@ for pair in "${COPY_MAP[@]}"; do
     fi
 
     echo "  → Copying from $src to $dest"
-    mkdir -p "$(dirname "$dest")"
 
-    # Handle directories and files separately
     if [ -d "$src" ]; then
-        rsync -avh --delete --progress "$src/" "$dest/"
+        mkdir -p "$dest"
     else
-        rsync -avh --progress "$src" "$dest"
+        mkdir -p "$(dirname "$dest")"
     fi
+
+    # Backup existing destination
+    timestamp=$(date +"%Y%m%d-%H%M%S")
+    if [ -d "$dest" ] || [ -f "$dest" ]; then
+        backup="$dest.backup-$timestamp"
+        echo "    Backing up existing $dest → $backup"
+        cp -r "$dest" "$backup"
+    fi
+
+    rsync $RSYNC_OPTS "$src" "$dest"
 done
 
 echo -e "${GREEN}[✓] All files and folders copied successfully.${RESET}"
