@@ -32,7 +32,7 @@ floating_modifier $super
 
 
 # autostart
-exec --no-startup-id hsetroot -fill ~/.wallpaper.svg
+exec --no-startup-id hsetroot -fill ~/Pictures/wallpapers/.wallpaper.svg
 exec /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1
 exec --no-startup-id picom --config ~/.config/picom/picom.conf
 
