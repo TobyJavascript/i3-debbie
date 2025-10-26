@@ -71,8 +71,8 @@ echo -e "${YELLOW}[*] Copying configured files and folders...${RESET}"
 for pair in "${COPY_MAP[@]}"; do
     src="${pair%% -> *}"
     dest="${pair##*-> }"
-    src="$(eval echo "$src")"
-    dest="$(eval echo "$dest")"
+    src="${src/#\~/$HOME}"
+    dest="${dest/#\~/$HOME}"
 
     if [ ! -e "$src" ]; then
         echo -e "${RED}[!] Source not found: $src${RESET}"
@@ -81,21 +81,27 @@ for pair in "${COPY_MAP[@]}"; do
 
     echo "  → Copying from $src to $dest"
 
+    # Make destination directory
     if [ -d "$src" ]; then
         mkdir -p "$dest"
     else
         mkdir -p "$(dirname "$dest")"
     fi
 
-    # Backup existing destination
+    # Backup existing destination before copying
     timestamp=$(date +"%Y%m%d-%H%M%S")
-    if [ -d "$dest" ] || [ -f "$dest" ]; then
+    if [ -e "$dest" ]; then
         backup="$dest.backup-$timestamp"
         echo "    Backing up existing $dest → $backup"
         cp -r "$dest" "$backup"
     fi
 
-    rsync $RSYNC_OPTS "$src" "$dest"
+    # Copy safely (merge directories, replace files)
+    if [ -d "$src" ]; then
+        rsync $RSYNC_OPTS "$src/" "$dest/"
+    else
+        rsync $RSYNC_OPTS "$src" "$dest"
+    fi
 done
 
 echo -e "${GREEN}[✓] All files and folders copied successfully.${RESET}"
