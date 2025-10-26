@@ -31,6 +31,7 @@ PACKAGES=(
     dunst
     policykit-1-gnome
     rsync
+    kitty
     
     # Fonts / Text Rendering
     fonts-firacode

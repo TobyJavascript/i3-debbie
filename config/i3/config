@@ -32,14 +32,14 @@ floating_modifier $super
 
 
 # autostart
-exec --no-startup-id hsetroot -fill ~/Pictures/wallpapers/.wallpaper.svg
+exec --no-startup-id hsetroot -fill ~/Pictures/wallpapers/2wallpaper.png
 exec /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1
 exec --no-startup-id picom --config ~/.config/picom/picom.conf
 
 
 
 # start a terminal
-bindsym $super+Return exec i3-sensible-terminal
+bindsym $super+Return exec kitty
 
 # start dmenu (a program launcher)
 bindsym $super+d exec i3-dmenu-desktop --dmenu="dmenu -i -b \
@@ -58,7 +58,7 @@ bindsym Print exec scrot 'Cheese_%a-%d%b%y_%H.%M.png' -e 'xdg-open ~/$f'
 bindsym $super+l exec i3lock -i ~/.lock.png
 bindsym $super+w exec firefox
 bindsym $super+e exec thunarer
-bindsym $super+b exec steam
+bindsym $super+b exec kitty btop
 
 
 
