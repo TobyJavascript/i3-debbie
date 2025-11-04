@@ -32,9 +32,21 @@ PACKAGES=(
     policykit-1-gnome
     rsync
     kitty
+    picom
+    btop
+    fzf
+
+    # Additional Package Managers
+    snapd
     
     # Fonts / Text Rendering
     fonts-firacode
+)
+
+# === SNAPS LIST ===
+SNAPS=(
+    dust
+    mapscii
 )
 
 # === FILE/FOLDER MOVE MAP ===
@@ -45,7 +57,11 @@ COPY_MAP=(
     "$SCRIPT_DIR/wallpapers -> $HOME/Pictures/wallpapers"
 )
 
+
+
 echo -e "${GREEN}[*] Starting i3 rice setup for Debian 12...${RESET}"
+
+
 
 # === System Update ===
 echo -e "${YELLOW}[*] Updating package lists...${RESET}"
@@ -62,6 +78,26 @@ for pkg in "${PACKAGES[@]}"; do
     fi
 done
 echo -e "${GREEN}[✓] Package installation complete.${RESET}"
+
+
+
+# === Install Required Snap Packages (skip existing) ===
+echo -e "${YELLOW}[*] Installing required snap packages (skipping existing)...${RESET}"
+for snap in "${SNAPS[@]}"; do
+    # Extract snap name (first word before options)
+    SNAP_NAME=$(echo "$snap" | awk '{print $1}')
+
+    if snap list | awk '{print $1}' | grep -q "^${SNAP_NAME}$"; then
+        echo "  → ${SNAP_NAME} already installed"
+    else
+        echo "  → Installing ${SNAP_NAME}"
+        sudo snap install $snap
+    fi
+done
+
+echo -e "${GREEN}[✓] Snap package installation complete.${RESET}"
+
+
 
 # === Copy Files and Folders ===
 RSYNC_OPTS="-avh --progress"
@@ -106,6 +142,8 @@ for pair in "${COPY_MAP[@]}"; do
 done
 
 echo -e "${GREEN}[✓] All files and folders copied successfully.${RESET}"
+
+
 
 # === Reload i3 (if running) ===
 if pgrep -x "i3" >/dev/null 2>&1; then
